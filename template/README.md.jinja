@@ -9,8 +9,17 @@
 
 ## Requirements
 
-- [uv](https://docs.astral.sh/uv/) (it installs Python {{ python_version }} for you)
-- `make` (Windows: `winget install ezwinports.make`, or use the raw `uv run ...` commands in the [Makefile](Makefile))
+[uv](https://docs.astral.sh/uv/) (it installs Python {{ python_version }} for you), Git ≥ 2.31 and `make`:
+
+| Tool | macOS | Linux (Debian/Ubuntu) | Windows (PowerShell) |
+| ---- | ----- | --------------------- | -------------------- |
+| uv   | `brew install uv` | `curl -LsSf https://astral.sh/uv/install.sh \| sh` | `winget install astral-sh.uv` |
+| Git  | `brew install git` | `sudo apt install git` | `winget install Git.Git` |
+| make | `xcode-select --install` | `sudo apt install make` | `winget install ezwinports.make` |
+
+All `make` targets work in bash, zsh, PowerShell and cmd. Without `make`, run the
+`uv run ...` line from the [Makefile](Makefile). On Windows, also run
+`git config --global core.longpaths true` once.
 
 ## Quickstart
 

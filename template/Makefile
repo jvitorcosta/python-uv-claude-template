@@ -1,8 +1,12 @@
 .DEFAULT_GOAL := help
 .PHONY: help install sync lock upgrade format lint typecheck test cov check pre-commit build clean
 
+# Recipes use only `uv ...` and Python one-liners, so they behave the same in
+# bash/zsh (macOS, Linux) and cmd/PowerShell (Windows): no awk, rm or find.
+PY := uv run --no-project --quiet python -c
+
 help: ## Show this help
-	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z_-]+:.*##/ {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@$(PY) "import re; [print(f'  {t:<12} {d}') for t, d in re.findall(r'^([a-zA-Z_-]+):.*?## (.*)$$', open('Makefile').read(), re.M)]"
 
 install: ## Install deps and git hooks (first-time setup)
 	uv sync --all-groups
@@ -44,5 +48,4 @@ build: ## Build sdist + wheel into dist/
 	uv build
 
 clean: ## Remove caches and build artifacts
-	rm -rf dist build .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov
-	find . -type d -name __pycache__ -prune -exec rm -rf {} +
+	@$(PY) "import shutil, pathlib as p; [shutil.rmtree(d, ignore_errors=True) for d in ['dist', 'build', '.pytest_cache', '.mypy_cache', '.ruff_cache', 'htmlcov', *(x for x in p.Path('.').rglob('__pycache__') if '.venv' not in x.parts)]]; p.Path('.coverage').unlink(missing_ok=True)"

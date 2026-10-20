@@ -11,6 +11,11 @@ make install
 This runs `uv sync --all-groups` and installs the pre-commit hooks. You never
 need to activate a virtualenv: prefix commands with `uv run`.
 
+Prerequisites (uv, Git ≥ 2.31, make) for macOS, Linux and Windows are listed in the
+[README](README.md#requirements). The project is tested in CI on all three OSes, so
+keep scripts portable: use `pathlib`, not hard-coded `/` or `\` separators, and add new
+`make` targets as `uv run ...` commands, not shell utilities.
+
 ## Workflow
 
 1. Create a branch from `main`: `git switch -c feat/short-description`

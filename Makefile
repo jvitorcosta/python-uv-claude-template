@@ -1,11 +1,15 @@
 .DEFAULT_GOAL := help
 .PHONY: help render test clean
 
+# Recipes use only `uv ...` (with --directory instead of cd) and Python one-liners, so they behave the
+# same in bash/zsh (macOS, Linux) and cmd/PowerShell (Windows).
+PY := uv run --no-project --quiet python -c
 TMP := .tmp
-COPIER := uvx copier copy --trust --defaults --overwrite --vcs-ref=HEAD
+COPIER := uvx copier copy --defaults --overwrite --quiet --vcs-ref=HEAD
+check = uv --directory $(1) sync --all-groups --quiet && uv --directory $(1) run ruff check . && uv --directory $(1) run ruff format --check . && uv --directory $(1) run mypy && uv --directory $(1) run pytest --cov -q
 
 help: ## Show this help
-	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z_-]+:.*##/ {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@$(PY) "import re; [print(f'  {t:<10} {d}') for t, d in re.findall(r'^([a-zA-Z_-]+):.*?## (.*)$$', open('Makefile').read(), re.M)]"
 
 render: ## Render the default variant into .tmp/default
 	$(COPIER) . $(TMP)/default
@@ -13,10 +17,9 @@ render: ## Render the default variant into .tmp/default
 test: clean ## Render all variants and run their checks
 	$(COPIER) . $(TMP)/default
 	$(COPIER) -d include_cli=true -d project_name="Cli Demo" -d license=Proprietary . $(TMP)/cli
-	for d in default cli; do \
-		(cd $(TMP)/$$d && uv sync --all-groups -q && uv run ruff check . && \
-		 uv run ruff format --check . && uv run mypy && uv run pytest --cov -q) || exit 1; \
-	done
+	$(call check,$(TMP)/default)
+	$(call check,$(TMP)/cli)
+	$(MAKE) -C $(TMP)/default help clean
 
 clean: ## Remove rendered output
-	rm -rf $(TMP)
+	@$(PY) "import shutil; shutil.rmtree('$(TMP)', ignore_errors=True)"

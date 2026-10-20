@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -21,5 +21,16 @@ jobs:
         run: |
           git config --global user.name ci
           git config --global user.email ci@example.com
-      - run: make test
+      - name: Install make (Windows)
+        if: runner.os == 'Windows'
         shell: bash
+        run: command -v make || choco install make -y --no-progress
+
+      - name: make test (bash / zsh)
+        shell: bash
+        run: make test
+
+      - name: make test (Windows cmd, no POSIX tools)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: make SHELL=cmd.exe test
