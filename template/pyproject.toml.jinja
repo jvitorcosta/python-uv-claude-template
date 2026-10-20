@@ -1,0 +1,82 @@
+[project]
+name = "{{ project_slug }}"
+version = "0.1.0"
+description = "{{ description }}"
+readme = "README.md"
+requires-python = ">={{ python_version }}"
+{%- if author_email %}
+authors = [{ name = "{{ author_name }}", email = "{{ author_email }}" }]
+{%- else %}
+authors = [{ name = "{{ author_name }}" }]
+{%- endif %}
+{%- if license == "MIT" %}
+license = "MIT"
+license-files = ["LICENSE"]
+{%- endif %}
+dependencies = [
+{%- if include_cli %}
+    "typer>=0.16",
+{%- endif %}
+]
+
+{%- if include_cli %}
+
+[project.scripts]
+{{ project_slug }} = "{{ package_name }}.cli:app"
+{%- endif %}
+
+[build-system]
+requires = ["uv_build>=0.9,<1"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18",
+    "pre-commit>=4.3",
+    "pytest>=8.4",
+    "pytest-cov>=7.0",
+    "ruff>=0.14",
+]
+
+# ---------------------------------------------------------------- ruff
+[tool.ruff]
+line-length = 100
+target-version = "py{{ python_version | replace('.', '') }}"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "B",        # bugbear
+    "UP",       # pyupgrade
+    "SIM",      # simplify
+    "RUF",      # ruff-specific
+    "N",        # pep8-naming
+    "PTH",      # use pathlib
+    "S",        # bandit (security)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # assert is fine in tests
+
+# ---------------------------------------------------------------- mypy
+[tool.mypy]
+python_version = "{{ python_version }}"
+strict = true
+files = ["src", "tests"]
+
+# ---------------------------------------------------------------- pytest
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["{{ package_name }}"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 80

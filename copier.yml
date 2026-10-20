@@ -1,0 +1,82 @@
+# Copier template: Python + uv + Claude Code
+# Usage:  uvx copier copy gh:<you>/python-uv-claude-template my-project
+# Update: cd my-project && uvx copier update
+
+_min_copier_version: "9.0"
+_subdirectory: template
+_templates_suffix: .jinja
+_answers_file: .copier-answers.yml
+
+_message_after_copy: |
+  Project "{{ project_name }}" created at {{ _copier_conf.dst_path }}.
+
+  Next steps:
+    cd {{ _copier_conf.dst_path }}
+    git init -b main
+    make install     # uv sync + pre-commit hooks
+    make check       # lint + typecheck + tests
+
+project_name:
+  type: str
+  help: Human-readable project name
+  default: My Project
+
+project_slug:
+  type: str
+  help: Repository / distribution name (kebab-case)
+  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
+  validator: >-
+    {% if not (project_slug | regex_search('^[a-z][a-z0-9-]*$')) %}
+    Must be lowercase kebab-case (letters, digits, dashes).
+    {% endif %}
+
+package_name:
+  type: str
+  help: Python import name (snake_case)
+  default: "{{ project_slug | replace('-', '_') }}"
+  validator: >-
+    {% if not (package_name | regex_search('^[a-z][a-z0-9_]*$')) %}
+    Must be a valid lowercase Python identifier.
+    {% endif %}
+
+description:
+  type: str
+  help: One-line description
+  default: A Python project built with uv and Claude Code.
+
+author_name:
+  type: str
+  help: Author name
+  default: João Vitor Pinheiro
+
+author_email:
+  type: str
+  help: Author email
+  default: ""
+
+github_owner:
+  type: str
+  help: GitHub user or org that will own the repo
+  default: jvitorcosta
+
+python_version:
+  type: str
+  help: Minimum Python version
+  choices:
+    - "3.14"
+    - "3.13"
+    - "3.12"
+  default: "3.13"
+
+include_cli:
+  type: bool
+  help: Include a Typer CLI entry point?
+  default: false
+
+license:
+  type: str
+  help: License
+  choices:
+    - MIT
+    - Proprietary
+  default: MIT

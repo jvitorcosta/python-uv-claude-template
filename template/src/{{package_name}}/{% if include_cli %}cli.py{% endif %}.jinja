@@ -1,0 +1,19 @@
+"""Command-line interface for {{ project_name }}."""
+
+import typer
+
+from {{ package_name }} import __version__, hello
+
+app = typer.Typer(help="{{ description }}", no_args_is_help=True)
+
+
+@app.command()
+def greet(name: str = "world") -> None:
+    """Print a greeting."""
+    typer.echo(hello(name))
+
+
+@app.command()
+def version() -> None:
+    """Print the installed version."""
+    typer.echo(__version__)
