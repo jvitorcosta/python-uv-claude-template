@@ -25,5 +25,5 @@ Without `make`, run the commands in the [Makefile](Makefile) directly.
 - Keep generated projects passing `make check` with zero warnings.
 - When bumping tool versions (ruff-pre-commit, setup-uv, ...), update both the
   template and this repo's CI.
-- Tag releases (`git tag v1.2.0`); `copier update` uses tags to find new versions.
+- Tag releases with an **annotated** tag (`git tag -a v1.2.0 -m v1.2.0`) and push it; `copier update` uses tags to find new versions, and a plain tag is skipped by `git push --follow-tags`.
 - Use Conventional Commits.

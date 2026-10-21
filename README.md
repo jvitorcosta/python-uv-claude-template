@@ -100,8 +100,8 @@ Ubuntu, macOS and Windows (Git Bash **and** plain `cmd`).
 ```bash
 make test                       # must pass
 git commit -am "feat: ..."      # Conventional Commits
-git tag v0.2.0                  # semver: major = breaking change for generated projects
-git push --follow-tags
+git tag -a v0.3.0 -m "v0.3.0"   # annotated; semver: major = breaking change for generated projects
+git push --follow-tags          # only pushes annotated tags, hence -a
 ```
 
 Then in any generated project: `uvx copier update`.
