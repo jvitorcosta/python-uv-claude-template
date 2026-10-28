@@ -11,7 +11,8 @@
 ## Testing a change
 
 ```bash
-make test        # render default + CLI variants into .tmp/ and run lint/types/tests
+make test        # test the hooks, render default + CLI variants into .tmp/ and run lint/types/tests
+make test-hooks  # only the tests for template/.claude/hooks (tests/test_hooks.py)
 make render      # render default variant into .tmp/default for manual poking
 make clean
 ```
@@ -26,4 +27,6 @@ Without `make`, run the commands in the [Makefile](Makefile) directly.
 - When bumping tool versions (ruff-pre-commit, setup-uv, ...), update both the
   template and this repo's CI.
 - Tag releases with an **annotated** tag (`git tag -a v1.2.0 -m v1.2.0`) and push it; `copier update` uses tags to find new versions, and a plain tag is skipped by `git push --follow-tags`.
+- Changing a hook? Add a case to `tests/test_hooks.py` that fails without your change.
+- Add the change to `CHANGELOG.md` under Unreleased.
 - Use Conventional Commits.
