@@ -1,7 +1,18 @@
 # python-uv-claude-template
 
+[![Test template](https://github.com/jvitorcosta/python-uv-claude-template/actions/workflows/test-template.yml/badge.svg)](https://github.com/jvitorcosta/python-uv-claude-template/actions/workflows/test-template.yml)
+[![Latest version](https://img.shields.io/github/v/tag/jvitorcosta/python-uv-claude-template?label=template&sort=semver)](CHANGELOG.md)
+
 A [Copier](https://copier.readthedocs.io) template for Python projects built with
 **uv**, **Ruff**, **mypy**, **pytest**, a **Makefile**, and a full **Claude Code** setup.
+
+One command gives you a project that already lints, type-checks and tests on three operating
+systems, with Claude Code set up to follow the same rules. Later template improvements reach the
+project with `uvx copier update`.
+
+```bash
+uvx copier copy gh:jvitorcosta/python-uv-claude-template my-project
+```
 
 ## Prerequisites (one-time per machine)
 
@@ -69,6 +80,22 @@ Commit or stash your work first (Copier refuses to update a dirty repo). It only
 | Docs           | README, CONTRIBUTING, CHANGELOG, PR + issue templates           |
 | Optional       | Typer CLI, MIT license                                          |
 
+### A generated project
+
+```
+my-project/
+├── src/my_project/        # your package (py.typed); cli.py if you chose the Typer CLI
+├── tests/                 # pytest, 80% coverage gate
+├── pyproject.toml         # uv_build, ruff, mypy strict, pytest, coverage
+├── uv.lock
+├── Makefile               # make help: install, check, test, format, build, ...
+├── .pre-commit-config.yaml
+├── .github/               # CI on 3 OSes, Dependabot, PR and issue templates
+├── CLAUDE.md, .claude/    # Claude Code setup (below)
+├── README.md, CONTRIBUTING.md, CHANGELOG.md
+└── .copier-answers.yml    # what `copier update` needs
+```
+
 ### Claude Code layout
 
 ```
@@ -81,26 +108,30 @@ CLAUDE.md                     # project context, commands, conventions (imports 
 ├── skills/release/           # SKILL.md + changelog-format.md
 ├── agents/                   # code-reviewer, security-auditor
 └── hooks/
-    ├── validate_bash.py      # PreToolUse: blocks pip, rm -rf /, force-push, .env reads…
-    └── format_python.py      # PostToolUse: ruff fix + format on every edited .py
+    ├── validate_bash.py      # PreToolUse: blocks pip, rm -rf /, force-push, push to main, .env reads…
+    └── format_python.py      # PostToolUse: ruff fix + format on each .py edited in the project
 ```
 
 The hooks are stdlib Python run with `uv run --no-project`, so they work on
-Windows, macOS and Linux without `jq` or POSIX tools. `CLAUDE.local.md` and
+Windows, macOS and Linux without `jq` or POSIX tools. `validate_bash.py` checks each part of a
+command line on its own (`git push origin fix && gh pr create --base main` is fine) and reads the
+push's refspecs, so `git push origin HEAD:main` is caught. `format_python.py` leaves files outside
+the project alone. Both are tested in this repo (`make test-hooks`). `CLAUDE.local.md` and
 `.claude/settings.local.json` are gitignored for personal overrides.
 
 ## Developing the template
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). TL;DR: `make test` renders the template twice
-(default + CLI variant) and runs the full check suite on each. CI runs it on
+See [CONTRIBUTING.md](CONTRIBUTING.md). TL;DR: `make test` tests the hooks, renders the
+template twice (default + CLI variant) and runs the full check suite on each. CI runs it on
 Ubuntu, macOS and Windows (Git Bash **and** plain `cmd`).
 
 ## Releasing a new template version
 
 ```bash
 make test                       # must pass
+# add the version's section to CHANGELOG.md
 git commit -am "feat: ..."      # Conventional Commits
-git tag -a v0.3.0 -m "v0.3.0"   # annotated; semver: major = breaking change for generated projects
+git tag -a vX.Y.Z -m "vX.Y.Z"   # annotated; semver: major = breaking change for generated projects
 git push --follow-tags          # only pushes annotated tags, hence -a
 ```
 
