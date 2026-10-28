@@ -47,7 +47,7 @@ description:
 author_name:
   type: str
   help: Author name
-  default: João Vitor Pinheiro
+  default: Vitor Pinheiro
 
 author_email:
   type: str
