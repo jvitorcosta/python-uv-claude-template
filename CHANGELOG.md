@@ -6,6 +6,8 @@ version breaks generated projects.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-28
+
 ### Fixed
 - `validate_bash.py` checks each part of a command line on its own. A push to a feature branch
   next to `gh pr create --base main` is no longer blocked as a push to main, and an unrelated
