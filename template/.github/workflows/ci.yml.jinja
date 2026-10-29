@@ -23,8 +23,7 @@ jobs:
         with:
           enable-cache: true
 
-{% endraw %}{%- if include_data_science %}
-      # LightGBM and XGBoost macOS wheels link against Homebrew's OpenMP runtime.
+{% endraw %}{% if include_data_science %}      # LightGBM and XGBoost macOS wheels link against Homebrew's OpenMP runtime.
       - name: Install libomp (macOS)
         if: runner.os == 'macOS'
         run: brew install libomp
