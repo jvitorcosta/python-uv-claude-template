@@ -6,6 +6,28 @@ version breaks generated projects.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-29
+
+New questions, all off by default: with the defaults a generated project is byte-for-byte the
+same as with 0.3.0 (only `.copier-answers.yml` records the new answers).
+
+### Added
+- `include_example` (default yes): answer no to drop the `hello()` example and its tests, keeping
+  only `__version__`. With the Typer CLI, only the `version` command remains.
+- `include_data_science` (default no): numpy, pandas, scikit-learn, `pandas-stubs`, `ipykernel`, a
+  mypy override for scikit-learn, `notebooks/` excluded from Ruff, `data/` and `artifacts/`
+  gitignored, notes in CLAUDE.md, and a `brew install libomp` step on macOS CI (LightGBM and
+  XGBoost wheels need it).
+- `protect_project_files` (default no): `copier update` skips `README.md`, `CHANGELOG.md` and the
+  package `__init__.py` once they exist (`_skip_if_exists`). Existing projects opt in with
+  `uvx copier update -d protect_project_files=true`.
+- `make test` renders two more variants: a bare CLI without the example, and data/ML with
+  protected files.
+
+### Changed
+- `.gitignore` and `.github/workflows/ci.yml` are now rendered (`.jinja`) so the data option can
+  extend them; the CI file wraps its GitHub expressions in `{% raw %}`.
+
 ## [0.3.0] - 2026-10-28
 
 ### Fixed
