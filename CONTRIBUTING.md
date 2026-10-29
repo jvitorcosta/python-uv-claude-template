@@ -11,7 +11,7 @@
 ## Testing a change
 
 ```bash
-make test        # test the hooks, render default + CLI variants into .tmp/ and run lint/types/tests
+make test        # test the hooks, render default, CLI, bare and data variants into .tmp/ and run lint/types/tests
 make test-hooks  # only the tests for template/.claude/hooks (tests/test_hooks.py)
 make render      # render default variant into .tmp/default for manual poking
 make clean

@@ -1,4 +1,4 @@
-name: CI
+{% raw %}name: CI
 
 on:
   push:
@@ -23,8 +23,14 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install
-        run: uv sync --all-groups --locked
+{% endraw %}{%- if include_data_science %}
+      # LightGBM and XGBoost macOS wheels link against Homebrew's OpenMP runtime.
+      - name: Install libomp (macOS)
+        if: runner.os == 'macOS'
+        run: brew install libomp
+
+{% endif %}      - name: Install
+        run: uv sync --all-groups --locked{% raw %}
 
       - name: Lint
         run: |
@@ -36,3 +42,4 @@ jobs:
 
       - name: Test
         run: uv run pytest --cov --cov-report=term-missing
+{% endraw %}

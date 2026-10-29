@@ -2,15 +2,23 @@
 
 import typer
 
-from {{ package_name }} import __version__, hello
+from {{ package_name }} import __version__{% if include_example %}, hello{% endif %}
 
 app = typer.Typer(help="{{ description }}", no_args_is_help=True)
+{%- if include_example %}
 
 
 @app.command()
 def greet(name: str = "world") -> None:
     """Print a greeting."""
     typer.echo(hello(name))
+{%- else %}
+
+
+@app.callback()
+def main() -> None:
+    """Keep subcommands even while there is only one."""
+{%- endif %}
 
 
 @app.command()

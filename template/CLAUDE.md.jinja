@@ -10,6 +10,9 @@
 {%- if include_cli %}
 - Typer CLI at `src/{{ package_name }}/cli.py` (entry point `{{ project_slug }}`)
 {%- endif %}
+{%- if include_data_science %}
+- numpy, pandas, scikit-learn; `notebooks/` for exploration only
+{%- endif %}
 
 ## Commands
 
@@ -33,6 +36,10 @@ If `make` is unavailable, run the equivalent `uv run ...` line from the `Makefil
 - Don't `pip install` or edit `uv.lock` by hand.
 - Don't add `# type: ignore` / `# noqa` without a reason comment.
 - Don't commit secrets; config comes from environment variables.
+{%- if include_data_science %}
+- Don't commit data or trained models: `data/` and `artifacts/` are gitignored.
+- Don't put pipeline logic in notebooks; it goes in `src/` with tests.
+{%- endif %}
 
 ## Architecture
 

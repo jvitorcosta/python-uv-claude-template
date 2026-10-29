@@ -4,12 +4,14 @@ from {{ package_name }} import __version__
 from {{ package_name }}.cli import app
 
 runner = CliRunner()
+{%- if include_example %}
 
 
 def test_greet() -> None:
     result = runner.invoke(app, ["greet", "--name", "Claude"])
     assert result.exit_code == 0
     assert "Hello, Claude!" in result.output
+{%- endif %}
 
 
 def test_version() -> None:

@@ -21,8 +21,12 @@ test-hooks: ## Test the Claude Code hooks shipped in template/.claude/hooks
 test: clean test-hooks ## Test the hooks, render all variants and run their checks
 	$(COPIER) . $(OUT)/default
 	$(COPIER) -d include_cli=true -d project_name="Cli Demo" -d license=Proprietary . $(OUT)/cli
+	$(COPIER) -d include_cli=true -d include_example=false -d project_name="Bare Cli" . $(OUT)/bare
+	$(COPIER) -d include_data_science=true -d include_example=false -d protect_project_files=true -d project_name="Data Demo" . $(OUT)/data
 	$(call check,$(OUT)/default)
 	$(call check,$(OUT)/cli)
+	$(call check,$(OUT)/bare)
+	$(call check,$(OUT)/data)
 	$(MAKE) -C $(OUT)/default help clean
 
 clean: ## Remove rendered output

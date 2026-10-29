@@ -14,6 +14,11 @@ license = "MIT"
 license-files = ["LICENSE"]
 {%- endif %}
 dependencies = [
+{%- if include_data_science %}
+    "numpy>=2.2",
+    "pandas>=2.3",
+    "scikit-learn>=1.7",
+{%- endif %}
 {%- if include_cli %}
     "typer>=0.16",
 {%- endif %}
@@ -31,7 +36,13 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+{%- if include_data_science %}
+    "ipykernel>=6.30",
+{%- endif %}
     "mypy>=1.18",
+{%- if include_data_science %}
+    "pandas-stubs>=2.3",
+{%- endif %}
     "pre-commit>=4.3",
     "pytest>=8.4",
     "pytest-cov>=7.0",
@@ -43,6 +54,9 @@ dev = [
 line-length = 100
 target-version = "py{{ python_version | replace('.', '') }}"
 src = ["src", "tests"]
+{%- if include_data_science %}
+extend-exclude = ["notebooks"]  # exploration only; the pipeline lives in src/
+{%- endif %}
 
 [tool.ruff.lint]
 select = [
@@ -66,6 +80,13 @@ select = [
 python_version = "{{ python_version }}"
 strict = true
 files = ["src", "tests"]
+{%- if include_data_science %}
+
+[[tool.mypy.overrides]]
+# No type stubs published; add other untyped libraries here (lightgbm.*, xgboost.*, shap.*).
+module = ["sklearn.*"]
+ignore_missing_imports = true
+{%- endif %}
 
 # ---------------------------------------------------------------- pytest
 [tool.pytest.ini_options]
