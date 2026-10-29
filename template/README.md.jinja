@@ -17,7 +17,9 @@
 | Git  | `brew install git` | `sudo apt install git` | `winget install Git.Git` |
 | make | `xcode-select --install` | `sudo apt install make` | `winget install ezwinports.make` |
 
-All `make` targets work in bash, zsh, PowerShell and cmd. Without `make`, run the
+{% if include_data_science %}On macOS, also `brew install libomp` if you add LightGBM or XGBoost.
+
+{% endif %}All `make` targets work in bash, zsh, PowerShell and cmd. Without `make`, run the
 `uv run ...` line from the [Makefile](Makefile). On Windows, also run
 `git config --global core.longpaths true` once.
 
@@ -34,7 +36,10 @@ make check     # lint + typecheck + tests
 ## Usage
 
 ```bash
+{%- if include_example %}
 uv run {{ project_slug }} greet --name you
+{%- endif %}
+uv run {{ project_slug }} version
 uv run {{ project_slug }} --help
 ```
 {%- endif %}
@@ -69,6 +74,10 @@ Add dependencies with `uv add <pkg>` (runtime) or `uv add --dev <pkg>` (tooling)
 │   └── hooks/             # Bash guard + auto-format
 ├── src/{{ package_name }}/
 ├── tests/
+{%- if include_data_science %}
+├── notebooks/             # Exploration only (not linted)
+├── data/                  # Raw data (gitignored)
+{%- endif %}
 ├── Makefile
 └── pyproject.toml
 ```
@@ -88,6 +97,11 @@ To pull in template improvements:
 ```bash
 uvx copier update
 ```
+{%- if protect_project_files %}
+
+`README.md`, `CHANGELOG.md` and `src/{{ package_name }}/__init__.py` belong to this project:
+`copier update` leaves them alone (`protect_project_files` in `.copier-answers.yml`).
+{%- endif %}
 {%- if license == "MIT" %}
 
 ## License

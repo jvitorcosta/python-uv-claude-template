@@ -1,3 +1,4 @@
+{%- if include_example -%}
 from {{ package_name }} import hello
 
 
@@ -7,3 +8,10 @@ def test_hello_default() -> None:
 
 def test_hello_name() -> None:
     assert hello("Claude") == "Hello, Claude!"
+{%- else -%}
+from {{ package_name }} import __version__
+
+
+def test_version_is_set() -> None:
+    assert __version__
+{%- endif %}

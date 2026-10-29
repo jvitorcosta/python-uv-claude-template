@@ -51,7 +51,16 @@ make check
 ```
 
 Works the same in bash, zsh, PowerShell and cmd. You'll be asked for the project name, package name, Python version, whether to include a
-Typer CLI, and a license.
+Typer CLI, and a license, plus three options that are off by default:
+
+| Question | Default | What it changes |
+| -------- | ------- | --------------- |
+| `include_example` | yes | No: drop the example `hello()` function and its tests (and the CLI's `greet`), keeping only `__version__`. |
+| `include_data_science` | no | Yes: numpy, pandas and scikit-learn; `pandas-stubs` and a mypy override for scikit-learn so `strict` still passes; `notebooks/` (not linted); `data/` and `artifacts/` gitignored; `brew install libomp` on macOS CI for LightGBM/XGBoost wheels. |
+| `protect_project_files` | no | Yes: `copier update` leaves `README.md`, `CHANGELOG.md` and the package `__init__.py` alone once they exist, instead of merging template changes into files the project has rewritten. |
+
+With the defaults, a generated project is identical to the previous template version.
+Existing projects can opt in on their next update, e.g. `uvx copier update -d protect_project_files=true`.
 
 ### Pull template updates into an existing project
 
@@ -78,7 +87,7 @@ Commit or stash your work first (Copier refuses to update a dirty repo). It only
 | CI             | GitHub Actions on Ubuntu, macOS, Windows (`astral-sh/setup-uv`) |
 | Deps updates   | Dependabot (uv + Actions)                                       |
 | Docs           | README, CONTRIBUTING, CHANGELOG, PR + issue templates           |
-| Optional       | Typer CLI, MIT license                                          |
+| Optional       | Typer CLI, MIT license, data/ML setup, protected project files  |
 
 ### A generated project
 
@@ -86,6 +95,7 @@ Commit or stash your work first (Copier refuses to update a dirty repo). It only
 my-project/
 ├── src/my_project/        # your package (py.typed); cli.py if you chose the Typer CLI
 ├── tests/                 # pytest, 80% coverage gate
+├── notebooks/             # only with include_data_science (data/, artifacts/ gitignored)
 ├── pyproject.toml         # uv_build, ruff, mypy strict, pytest, coverage
 ├── uv.lock
 ├── Makefile               # make help: install, check, test, format, build, ...
@@ -122,7 +132,8 @@ the project alone. Both are tested in this repo (`make test-hooks`). `CLAUDE.loc
 ## Developing the template
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). TL;DR: `make test` tests the hooks, renders the
-template twice (default + CLI variant) and runs the full check suite on each. CI runs it on
+template four times (default, CLI, bare CLI without the example, data/ML with protected files)
+and runs the full check suite on each. CI runs it on
 Ubuntu, macOS and Windows (Git Bash **and** plain `cmd`).
 
 ## Releasing a new template version

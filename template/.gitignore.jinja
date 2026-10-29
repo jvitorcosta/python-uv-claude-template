@@ -28,3 +28,10 @@ CLAUDE.local.md
 .vscode/
 .DS_Store
 Thumbs.db
+{%- if include_data_science %}
+
+# Data and model outputs: never committed
+data/
+artifacts/
+.ipynb_checkpoints/
+{%- endif %}

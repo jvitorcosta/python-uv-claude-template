@@ -3,8 +3,10 @@
 from importlib.metadata import version
 
 __version__ = version("{{ project_slug }}")
+{%- if include_example %}
 
 
 def hello(name: str = "world") -> str:
     """Return a friendly greeting."""
     return f"Hello, {name}!"
+{%- endif %}
