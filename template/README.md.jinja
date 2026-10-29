@@ -17,11 +17,9 @@
 | Git  | `brew install git` | `sudo apt install git` | `winget install Git.Git` |
 | make | `xcode-select --install` | `sudo apt install make` | `winget install ezwinports.make` |
 
-{%- if include_data_science %}
-On macOS, also `brew install libomp` if you add LightGBM or XGBoost.
+{% if include_data_science %}On macOS, also `brew install libomp` if you add LightGBM or XGBoost.
 
-{% endif -%}
-All `make` targets work in bash, zsh, PowerShell and cmd. Without `make`, run the
+{% endif %}All `make` targets work in bash, zsh, PowerShell and cmd. Without `make`, run the
 `uv run ...` line from the [Makefile](Makefile). On Windows, also run
 `git config --global core.longpaths true` once.
 
