@@ -1,0 +1,25 @@
+name: Bug report
+description: A rendered project or `copier update` doesn't work
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: answers
+    attributes:
+      label: Your Copier answers
+      description: The contents of `.copier-answers.yml` in the generated project.
+      render: yaml
+  - type: input
+    id: setup
+    attributes:
+      label: Operating system and shell, uv and Copier versions
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output or error
+      render: text
