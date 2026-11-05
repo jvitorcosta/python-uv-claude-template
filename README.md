@@ -6,6 +6,8 @@
 A [Copier](https://copier.readthedocs.io) template for Python projects built with
 **uv**, **Ruff**, **mypy**, **pytest**, a **Makefile**, and a full **Claude Code** setup.
 
+**Status:** early
+
 One command gives you a project that already lints, type-checks and tests on three operating
 systems, with Claude Code set up to follow the same rules. Later template improvements reach the
 project with `uvx copier update`.
@@ -13,6 +15,10 @@ project with `uvx copier update`.
 ```bash
 uvx copier copy gh:jvitorcosta/python-uv-claude-template my-project
 ```
+
+## Why I built it
+
+I wanted every new project to start with the same lint, type checks, tests, CI and Claude Code rules, and to pull later improvements in without copy-pasting. I use it for my own repos, for example [fraud-alert-explainer](https://github.com/jvitorcosta/fraud-alert-explainer).
 
 ## Prerequisites (one-time per machine)
 
@@ -30,15 +36,7 @@ Python for you, so you don't need a system Python. Optional: **gh** (GitHub CLI)
 Check: `uv --version && git --version && make --version`. Restart the terminal after
 installing on Windows so `PATH` picks them up.
 
-### Windows notes
-
-- Enable long paths once, or deep folders (and Copier) fail with *Filename too long*:
-  `git config --global core.longpaths true`. Keep projects in short paths like `D:\dev\`.
-- Every `make` target works from PowerShell/cmd and from Git Bash. Recipes only use `uv`
-  and Python, never `rm`/`awk`/`find`. No `make`? Copy the `uv run ...` line from the
-  `Makefile`.
-- Claude Code on Windows runs hooks through Git Bash, which Git for Windows installs.
-- Line endings are normalised to LF by `.gitattributes`, so mixed OS teams don't get noisy diffs.
+On Windows, read the [Windows notes](docs/windows.md) once (long paths, `make`, Git Bash).
 
 ## Use it
 
@@ -147,3 +145,7 @@ git push --follow-tags          # only pushes annotated tags, hence -a
 ```
 
 Then in any generated project: `uvx copier update`.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Projects you generate get their own license; the template asks which one you want.
