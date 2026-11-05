@@ -1,0 +1,15 @@
+name: Feature request
+description: Something new projects should get
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should the template add or change, and why?
+    validations:
+      required: true
+  - type: dropdown
+    id: optional
+    attributes:
+      label: Should it be a Copier question?
+      options: ["Yes, for everyone", "Yes, behind a question", "Not sure"]
